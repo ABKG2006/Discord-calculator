@@ -1,18 +1,31 @@
+import requests
+i=1j
 e=2.718281828459045
 pi=3.141592653589793
-omited_chars="wyuığüadfghjklşzxvbmöçQWERTYUIOPĞÜİŞLKJHGFDSA!?_"
+omited_chars="wyuığüjadfghklşzxvbmöçQWERTYUIOPĞÜİŞLKJHGFDSA!?_"
+clean_dict={"^":"**","deg":"*pi/180","1j":"i","j":"i"}
 def calculate(express):
     if omited_chars in str(express):
         return "Invalid chars in expression"
     else:
         try:
-            return str(eval(clean(express)))
+            x=eval(clean(express))
+            if x.imag!=0: 
+                if x.real!=0:
+                    x=clean(str(x))
+                    return x[1:-1]
+                else:
+                    x=clean(str(x))
+                    return x
+            else:
+                return str(x.real)
         except:
-            return "Invalid input"
+            return "invalid input"
+
 
         
 def sqrt(a):
-    return a**2
+    return a**(1/2)
 def taylorsin(a):
     return a-a**3/6+a**5/120-a**7/5040+a**9/362880-a**11/39916800+a**13/6227020800
 
@@ -53,6 +66,10 @@ def sec(a):
 def cosec(a):
     return 1/sin(a)
 def clean(a):
-    a = a.replace("^","**")
-    a = a.replace("deg","*pi/180")
+    for i in clean_dict.keys():
+        a=a.replace(i,clean_dict[i])
     return a
+def get_foxxo():
+    res = requests.get('https://randomfox.ca/floof')
+    data = res.json()
+    return data['link']
