@@ -3,6 +3,7 @@ import random
 import discord 
 from discord.ext import commands
 from logic import *
+count=0
 intents = discord.Intents.default()
 intents.message_content = True
 
@@ -11,7 +12,8 @@ bot = commands.Bot(command_prefix='//', intents=intents)
 
 @bot.event
 async def on_ready():
-    print(f'{bot.user} olarak giriş yaptık')
+    print('hello world')
+
 
 @bot.command()
 async def calc(ctx, a):
@@ -22,15 +24,38 @@ async def oplist(ctx):
 @bot.command()
 async def mem(ctx):
     try:
-        image=random.choice(os.listdir('images'))
+        randomFileSelectArray = random.choices(os.listdir('images') , weights=(10,40,20,20,20) , k=1)
+        
+        image=random.choice(randomFileSelectArray)
         with open(f'images/{image}', 'rb') as f:
             picture = discord.File(f)
         await ctx.send(file=picture)
+        
     except:
         await ctx.send("Unable to get memes at the moment,sorry")    
 @bot.command()
 async def fox(ctx):
-    image_url = get_foxxo()
-    await ctx.send(image_url)
-bot.run("token go here")
+    image = get_foxxo()
+    channel = bot.get_channel(a)#replace a with the channel id of the channel you want to send the images to leave as is to send to the channel the command was sent from
+    try:
+        await channel.send(image)
+    except:
+        await ctx.send(image)
+@bot.command()
+async def incrementor(ctx, a):
+    try:
+        a=int(a)
+        a+=1
+        await ctx.send(a)
+    except:
+        await ctx.send("Invalid input")
+@bot.command()
+async def decrementor(ctx, a):
+    try:
+        a=int(a)
+        a-=1
+        await ctx.send(a)
+    except:
+        await ctx.send("Invalid input")
+bot.run("Token goes here")
 
